@@ -57,13 +57,14 @@ public class UserRepository {
 
         if(user.getName() == null || user.getPassword() == null) return "Invalid data";
 
-        String sql = "UPDATE user SET name = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE user SET name = ?, password = ?, phone = ?  WHERE id = ?";
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,user.getName());
             preparedStatement.setString(2,user.getPassword());
-            preparedStatement.setLong(3,id);
+            preparedStatement.setString(3,user.getPhone());
+            preparedStatement.setLong(4,id);
 
             preparedStatement.executeUpdate();
 
@@ -106,6 +107,35 @@ public class UserRepository {
         }
 
         return JwtGenerator.generateJwt(user.getId());
+    }
+
+
+    public User getUserById(int id){
+
+
+        User user = new User();
+        String sql = "SELECT * FROM user WHERE id = ?";
+
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet =  preparedStatement.executeQuery();
+
+            if(!resultSet.next()) return new User();
+
+            user.setId(resultSet.getInt("id"));
+            user.setName(resultSet.getString("name"));
+            user.setUsername(resultSet.getString("username"));
+            user.setPhone(resultSet.getString("phone"));
+
+        }catch (SQLException e) {
+
+            System.out.println(e.getMessage());
+            return new User();
+        }
+
+        return user;
     }
 
 

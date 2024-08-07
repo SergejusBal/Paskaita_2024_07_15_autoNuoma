@@ -35,6 +35,16 @@ public class UserController {
 
     }
 
+    @GetMapping("/getUser")
+    public ResponseEntity<User> getUser(@RequestParam int id) {
+
+        User userdata = userService.getUserById(id);
+
+        if(userdata.getId() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        else return new ResponseEntity<>(userdata, HttpStatus.OK);
+    }
+
+
 
     @PostMapping("/authenticate")
     public ResponseEntity<String> login(@RequestBody User user) {
@@ -71,7 +81,6 @@ public class UserController {
         else return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
-
     @PutMapping("/user/update/{id}")
     public ResponseEntity<Boolean> registerUser(@RequestBody User user, @PathVariable Long id) {
 
@@ -82,10 +91,6 @@ public class UserController {
         else return new ResponseEntity<>(false, status);
 
     }
-
-
-
-
 
     private HttpStatus checkHttpStatus(String response){
 

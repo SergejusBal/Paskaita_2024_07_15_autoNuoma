@@ -43,6 +43,10 @@ public class UserService {
         return autorize(authorizationHeader);
     }
 
+    public User getUserById(int id){
+        return userRepository.getUserById(id);
+    }
+
 
 
     private boolean autorize(String authorizationHeader){
